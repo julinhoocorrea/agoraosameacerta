@@ -14,13 +14,13 @@
       // Check if user is already authenticated to avoid unnecessary redirects
       var hasAuthData = false;
       try {
-        var authStorage = localStorage.getItem('auth-storage');
+        var authStorage = sessionStorage.getItem('auth-session');
         if (authStorage) {
           var authData = JSON.parse(authStorage);
           hasAuthData = authData && authData.state && authData.state.isAuthenticated;
         }
       } catch (e) {
-        // localStorage might not be available, continue normally
+        // sessionStorage might not be available, continue normally
       }
 
       // Only process redirects if:
@@ -36,7 +36,7 @@
       }
     }(window.location))
   </script>
-  <script type="module" crossorigin src="/agoraosameacerta/assets/index-C1FPh8id.js"></script>
+  <script type="module" crossorigin src="/agoraosameacerta/assets/index-BCElb0u9.js"></script>
   <link rel="stylesheet" crossorigin href="/agoraosameacerta/assets/index-xgxhMAlj.css">
 </head>
 <body>
