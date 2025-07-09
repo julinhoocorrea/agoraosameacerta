@@ -6,13 +6,27 @@
   <title>Agência Check</title>
   <base href="/agoraosameacerta/">
 
-  <!-- GitHub Pages SPA redirect script - Chrome compatible -->
+  <!-- GitHub Pages SPA redirect script - Enhanced to avoid auth conflicts -->
   <script type="text/javascript">
     // Single Page Apps for GitHub Pages
-    // MIT License
-    // https://github.com/rafgraph/spa-github-pages
+    // Enhanced version to prevent conflicts with authenticated state
     (function(l) {
-      if (l.search[1] === '/' ) {
+      // Check if user is already authenticated to avoid unnecessary redirects
+      var hasAuthData = false;
+      try {
+        var authStorage = localStorage.getItem('auth-storage');
+        if (authStorage) {
+          var authData = JSON.parse(authStorage);
+          hasAuthData = authData && authData.state && authData.state.isAuthenticated;
+        }
+      } catch (e) {
+        // localStorage might not be available, continue normally
+      }
+
+      // Only process redirects if:
+      // 1. There's a search parameter indicating a GitHub Pages redirect
+      // 2. User is not already authenticated (to avoid conflicts)
+      if (l.search[1] === '/' && !hasAuthData) {
         var decoded = l.search.slice(1).split('&').map(function(s) {
           return s.replace(/~and~/g, '&')
         }).join('?');
@@ -22,8 +36,8 @@
       }
     }(window.location))
   </script>
-  <script type="module" crossorigin src="/agoraosameacerta/assets/index-C5wC094D.js"></script>
-  <link rel="stylesheet" crossorigin href="/agoraosameacerta/assets/index-CC5AYTDL.css">
+  <script type="module" crossorigin src="/agoraosameacerta/assets/index-C1FPh8id.js"></script>
+  <link rel="stylesheet" crossorigin href="/agoraosameacerta/assets/index-xgxhMAlj.css">
 </head>
 <body>
   <div id="root"></div>
