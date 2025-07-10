@@ -23,7 +23,7 @@ export function useIdleTimer() {
         console.log('⏰ Sessão expirada por inatividade - fazendo logout automático');
         logout();
         // Force redirect to login
-        window.location.href = '/login';
+        window.location.href = '/agoraosameacerta/login';
       }, IDLE_TIME);
 
       console.log('🔄 Timer de inatividade resetado - 10 minutos restantes');
