@@ -66,7 +66,7 @@ export function Login() {
 
         // Use React Router navigation instead of window.location
         console.log('🎯 Navigating to dashboard...');
-        navigate('/agoraosameacerta/dashboard', { replace: true });
+        navigate('/dashboard', { replace: true });
       } else {
         console.log('❌ Login failed - invalid credentials');
         setError('Email ou senha incorretos');

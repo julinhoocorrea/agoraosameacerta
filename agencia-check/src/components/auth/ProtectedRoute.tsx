@@ -32,14 +32,14 @@ export function ProtectedRoute({ children, requireRole }: ProtectedRouteProps) {
       sessionStorage.removeItem('auth-token');
     }
     // Redirect to login page with return url
-    return <Navigate to="/agoraosameacerta/login" state={{ from: location }} replace />;
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   // If a specific role is required, check if user has that role
   if (requireRole && user?.role !== requireRole) {
     console.log('🚫 Insufficient role, redirecting to dashboard');
     // Redirect to dashboard if user doesn't have required role
-    return <Navigate to="/agoraosameacerta/dashboard" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   console.log('✅ Protected route access granted');

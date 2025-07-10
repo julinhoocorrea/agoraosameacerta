@@ -116,9 +116,9 @@ export const useAuthStore = create<AuthState>()(
           console.log('🗑️ Auth data cleared from sessionStorage');
 
           // If not already on login page, redirect
-          if (window.location.pathname !== '/agoraosameacerta/login') {
+          if (window.location.pathname !== '/login') {
             console.log('📍 Redirecting to login page');
-            window.location.href = '/agoraosameacerta/login';
+            window.location.href = '/login';
           }
         }
       },

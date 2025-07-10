@@ -53,7 +53,7 @@ function App() {
   console.log('🎯 App render:', { isAuthenticated, user: user?.email, isLoading });
 
   return (
-    <Router>
+    <Router basename="/agoraosameacerta">
       <Routes>
         {/* Login route - always accessible */}
         <Route path="/login" element={<Login />} />
