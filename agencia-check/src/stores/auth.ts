@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { User } from '@/types';
+import { useDataStore } from './data';
 
 // Limpar dados antigos do localStorage apenas (manter sessionStorage)
 if (typeof window !== 'undefined') {
@@ -55,13 +56,30 @@ export const useAuthStore = create<AuthState>()(
         // Simulação de autenticação
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        const user = mockUsers.find(u => u.email === email);
-
-        // Credenciais específicas para cada usuário
-        const validCredentials =
+        // Verificar usuários estáticos
+        let user = mockUsers.find(u => u.email === email);
+        let validCredentials =
           (email === 'juliocorrea@check2.com.br' && password === 'Ju113007') ||
           (email === 'joao@revendedor.com' && password === '123456') ||
           (email === 'admin' && password === 'admin');
+
+        // Se não encontrou nos usuários estáticos, verificar revendedores cadastrados
+        if (!user || !validCredentials) {
+          const dataState = useDataStore.getState();
+          const revendedor = dataState.revendedores.find(r => r.email === email);
+
+          if (revendedor && revendedor.password === password) {
+            console.log('📊 Revendedor found:', revendedor.name);
+            user = {
+              id: revendedor.id,
+              name: revendedor.name,
+              email: revendedor.email,
+              role: 'revendedor' as const,
+              avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${revendedor.name}`
+            };
+            validCredentials = true;
+          }
+        }
 
         if (user && validCredentials) {
           console.log('✅ Login successful - saving token and state');

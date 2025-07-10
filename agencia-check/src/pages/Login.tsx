@@ -64,12 +64,9 @@ export function Login() {
 
         console.log('✅ Login successful, preparing redirect...');
 
-        // Navigate immediately without delay - the auth state should be ready
-        const destination = '/agoraosameacerta/dashboard';
-        console.log('🎯 Navigating to:', destination);
-
-        // Force a page refresh approach to ensure state is properly loaded
-        window.location.href = destination;
+        // Use React Router navigation instead of window.location
+        console.log('🎯 Navigating to dashboard...');
+        navigate('/agoraosameacerta/dashboard', { replace: true });
       } else {
         console.log('❌ Login failed - invalid credentials');
         setError('Email ou senha incorretos');

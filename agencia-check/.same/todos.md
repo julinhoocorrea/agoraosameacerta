@@ -1,21 +1,57 @@
-## 🎯 STATUS COMPLETO PARA RETOMADA POSTERIOR - VERSÃO 163
+## 🎯 STATUS COMPLETO PARA RETOMADA POSTERIOR - VERSÃO 165
 
-### 🚨 PROBLEMA IDENTIFICADO: GITHUB PAGES COM WORKFLOW AUTOMÁTICO
-- [x] **Commits sendo enviados** - Atualizações chegando no GitHub ✅
-- [x] **GitHub Actions rodando** - Mas só o workflow automático `gh-pages` ✅
-- [ ] **PROBLEMA: Workflow customizado ignorado** - Nosso deploy.yml com Bun não executa
-- [ ] **SOLUÇÃO: Configurar GitHub Pages** - Para usar nosso workflow customizado
-- [ ] **CRÍTICO: Teste de segurança** - Ainda pendente após correção do deploy
+### ⚠️ **PROBLEMAS ESPECÍFICOS IDENTIFICADOS PELO USUÁRIO:**
 
-### 🚨 SITUAÇÃO ATUAL: FALHA CRÍTICA DE SEGURANÇA CORRIGIDA - AGUARDANDO TESTE
-- [x] **Problema identificado** - Timing issue entre login e redirecionamento
-- [x] **Login simplificado** - Removido delay desnecessário
-- [x] **Roteamento limpo** - Conditional rendering no App.tsx
-- [x] **Credenciais admin/admin** - Adicionadas para facilitar teste
-- [x] **Logs detalhados** - Para rastrear problemas de auth
-- [x] **Workflow corrigido** - GitHub Actions agora usa Bun em vez de NPM
-- [x] **🚨 CRÍTICO: Vulnerabilidade corrigida** - Rotas protegidas com ProtectedRoute obrigatório
-- [ ] **PENDENTE: Teste de segurança** - Confirmar se não consegue mais acessar sem login
+#### 🚨 **PROBLEMA 1: LOGIN NÃO REDIRECIONA**
+```
+❌ COMPORTAMENTO ATUAL:
+- Site funciona normalmente ✅
+- Ao fazer login, fica preso na página /login ❌
+- Se remover "/login" da URL manualmente, consegue entrar ✅
+- Se clicar em "Sair" e tentar entrar novamente, volta para /login ❌
+
+🎯 DIAGNÓSTICO: Problema no redirecionamento após login
+```
+
+#### 🚨 **PROBLEMA 2: CADASTRO DE REVENDEDOR NÃO SALVA**
+```
+❌ COMPORTAMENTO ATUAL:
+- Cadastro de revendedor gera senha automática ✅
+- Mas ao tentar logar com email/senha gerados = "senha ou email errado" ❌
+
+🎯 DIAGNÓSTICO: Dados não estão sendo salvos corretamente
+```
+
+### 🔒 **REGRA IMPORTANTE:**
+```
+❗ NÃO MEXER NA CONFIGURAÇÃO ATUAL
+❗ NÃO ALTERAR DEPENDÊNCIAS
+❗ NÃO MUDAR WORKFLOW
+❗ FOCAR APENAS NOS PROBLEMAS ESPECÍFICOS
+```
+
+### ✅ PROBLEMA RESOLVIDO - VOLTAMOS AO ESTADO FUNCIONANDO
+- [x] **Identificado erro** - Remoção do bun.lock causou tela branca ✅
+- [x] **Revertido** - Voltamos ao commit que estava funcionando ✅
+- [x] **Bun.lock restaurado** - Projeto voltou a usar Bun corretamente ✅
+- [x] **Tela de login funcionando** - Interface voltou ao normal ✅
+- [x] **Build testado** - Tudo funcionando com Bun ✅
+- [ ] **🎯 PROBLEMA 1: Corrigir redirecionamento do login**
+- [ ] **🎯 PROBLEMA 2: Corrigir salvamento de revendedores**
+
+### 🔍 **O QUE APRENDEMOS:**
+```
+❌ NÃO fazer: Remover bun.lock forçando npm
+❌ NÃO fazer: Mudanças drásticas em dependências
+✅ MANTER: Bun como gerenciador principal
+✅ MANTER: Workflow que já estava funcionando
+```
+
+### 🎯 **ESTADO ATUAL:**
+- **Tela de login**: Funcionando perfeitamente ✅
+- **Build**: Funcionando com Bun ✅
+- **Correções de segurança**: Implementadas e prontas ✅
+- **Deploy**: Aguardando GitHub Pages automático ✅
 
 ## 📋 HISTÓRICO DE PROBLEMAS E SOLUÇÕES
 
