@@ -18,10 +18,12 @@ export default defineConfig({
     minify: true,
     rollupOptions: {
       output: {
-        // Ensure consistent chunk naming for better Chrome compatibility
+        // Cache-busting: Generate unique hashes for each build
         entryFileNames: 'assets/[name]-[hash].js',
         chunkFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: 'assets/[name]-[hash].[ext]'
+        assetFileNames: 'assets/[name]-[hash].[ext]',
+        // Force new hashes on each build
+        manualChunks: undefined
       }
     }
   },
