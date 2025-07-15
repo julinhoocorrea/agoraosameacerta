@@ -21,22 +21,55 @@ function App() {
   const user = useAuthStore((state) => state.user);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Error boundary for debugging
+  useEffect(() => {
+    const handleError = (error: ErrorEvent) => {
+      console.error('🚨 ERRO JAVASCRIPT:', {
+        message: error.message,
+        filename: error.filename,
+        lineno: error.lineno,
+        stack: error.error?.stack
+      });
+    };
+
+    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      console.error('🚨 PROMISE REJECTION:', event.reason);
+    };
+
+    window.addEventListener('error', handleError);
+    window.addEventListener('unhandledrejection', handleUnhandledRejection);
+
+    return () => {
+      window.removeEventListener('error', handleError);
+      window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+    };
+  }, []);
+
   // Monitor user activity and auto-logout after 10 minutes of inactivity
   useIdleTimer();
 
   useEffect(() => {
     // Only clear storage on initial load, not during session
     // Auth store already cleared storage on initialization
-    console.log('🚀 App initialized, auth state check:', { isAuthenticated });
+    console.log('🚀 App initialized, auth state check:', {
+      isAuthenticated,
+      user: user?.email,
+      hasToken: !!sessionStorage.getItem('auth-token')
+    });
 
     // Short loading time to allow React to stabilize
     const timer = setTimeout(() => {
-      console.log('⏱️ Loading complete, auth state:', { isAuthenticated });
+      console.log('⏱️ Loading complete, final auth state:', {
+        isAuthenticated,
+        user: user?.email,
+        hasToken: !!sessionStorage.getItem('auth-token'),
+        currentPath: window.location.pathname
+      });
       setIsLoading(false);
-    }, 50);
+    }, 100);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [isAuthenticated, user]);
 
   // Show loading screen while auth is initializing
   if (isLoading) {
@@ -53,7 +86,7 @@ function App() {
   console.log('🎯 App render:', { isAuthenticated, user: user?.email, isLoading });
 
   return (
-    <Router basename="/agoraosameacerta">
+    <Router>
       <Routes>
         {/* Login route - always accessible */}
         <Route path="/login" element={<Login />} />

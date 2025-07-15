@@ -118,7 +118,7 @@ export const useAuthStore = create<AuthState>()(
           // If not already on login page, redirect
           if (window.location.pathname !== '/login') {
             console.log('📍 Redirecting to login page');
-            window.location.href = '/agoraosameacerta/login';
+            window.location.href = '/login';
           }
         }
       },
