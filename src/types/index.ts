@@ -1,21 +1,79 @@
+export interface Permission {
+  id: string;
+  name: string;
+  description: string;
+  module: string;
+}
+
+export interface UserPermissions {
+  dashboard: boolean;
+  vendas: {
+    view: boolean;
+    create: boolean;
+    edit: boolean;
+    delete: boolean;
+  };
+  revendedores: {
+    view: boolean;
+    create: boolean;
+    edit: boolean;
+    delete: boolean;
+  };
+  estoque: {
+    view: boolean;
+    create: boolean;
+    edit: boolean;
+    delete: boolean;
+  };
+  pagamentos: {
+    view: boolean;
+    manage: boolean;
+  };
+  envios: {
+    view: boolean;
+    manage: boolean;
+  };
+  relatorios: {
+    view: boolean;
+    export: boolean;
+  };
+  configuracoes: {
+    view: boolean;
+    edit: boolean;
+  };
+  ia: {
+    view: boolean;
+    configure: boolean;
+  };
+}
+
 export interface User {
   id: string;
   name: string;
   email: string;
   role: 'admin' | 'revendedor';
   avatar?: string;
+  permissions?: UserPermissions;
+  createdAt?: Date;
+  lastLogin?: Date;
+  isActive?: boolean;
 }
 
 export interface Revendedor {
   id: string;
   name: string;
+  email: string;
   phone: string;
-  cpf?: string;
-  commission: number; // percentual
-  totalSold: number;
-  commissionPaid: number;
-  active: boolean;
+  whatsapp: string;
+  comission: number; // percentual
+  balance: number;
+  totalSales: number;
+  isActive: boolean;
   createdAt: Date;
+  updatedAt: Date;
+  permissions: UserPermissions;
+  password?: string; // Gerada automaticamente
+  temporaryPassword?: boolean; // Se deve trocar na primeira vez
 }
 
 export interface Venda {
@@ -40,30 +98,29 @@ export interface Venda {
 export interface EstoqueItem {
   id: string;
   name: string;
-  description?: string;
+  description: string;
   quantity: number;
-  price: number; // Preço por diamante em reais
-  category: 'diamonds' | 'packages' | 'special';
-  active: boolean;
+  price: number;
+  cost: number;
+  supplier: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
 export interface EstoqueMovimentacao {
   id: string;
+  type: 'entrada' | 'saida' | 'ajuste';
   itemId: string;
   itemName: string;
-  type: 'entrada' | 'saida' | 'ajuste';
   quantity: number;
   reason: string;
   date: Date;
   userId: string;
-  unitPrice?: number;
-  totalValue?: number;
 }
 
 export interface Estoque {
   items: EstoqueItem[];
+  currentStock: number;
   movimentacoes: EstoqueMovimentacao[];
 }
 
@@ -86,7 +143,7 @@ export interface IAConfig {
   id: string;
   command: string;
   response: string;
-  active: boolean;
+  isActive: boolean;
 }
 
 export interface DREReport {
@@ -139,4 +196,63 @@ export interface PendingPayment {
   paidAt?: Date;
   paymentUrl: string;
   qrCode: string;
+}
+
+export interface PixAdvancedConfig {
+  interClientId?: string;
+  interClientSecret?: string;
+  interCertPath?: string;
+  interKeyPath?: string;
+  interPixKey?: string;
+  interEnvironment?: 'production' | 'sandbox';
+}
+
+export interface PixPaymentRequest {
+  description: string;
+  amount: number;
+  pixProvider: 'inter' | '4send';
+  customerName?: string;
+  customerEmail?: string;
+  customerPhone?: string;
+  expiresIn?: number;
+  customerDocument?: string;
+  externalId?: string;
+}
+
+export interface DataState {
+  revendedores: Revendedor[];
+  vendas: Venda[];
+  estoque: Estoque;
+  iaConfigs: IAConfig[];
+  pendingPayments: PendingPayment[];
+  webhooks: PaymentWebhook[];
+
+  // Revendedor Actions
+  addRevendedor: (revendedor: Omit<Revendedor, 'id' | 'balance' | 'totalSales' | 'isActive' | 'createdAt' | 'updatedAt'> & { permissions?: UserPermissions }) => void;
+  updateRevendedor: (id: string, data: Partial<Revendedor>) => void;
+  removeRevendedor: (id: string) => void;
+
+  // Venda Actions
+  addVenda: (venda: Omit<Venda, 'id' | 'cost' | 'profit' | 'commission' | 'netProfit'>) => void;
+  updateVenda: (id: string, data: Partial<Venda>) => void;
+  updateVendaStatus: (id: string, status: Venda['status']) => void;
+  updateDeliveryStatus: (id: string, deliveryStatus: Venda['deliveryStatus'], userId: string) => void;
+
+  // Estoque Actions
+  addEstoqueItem: (item: Omit<EstoqueItem, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  updateEstoqueItem: (id: string, data: Partial<EstoqueItem>) => void;
+  removeEstoqueItem: (id: string) => void;
+  addMovimentacao: (movimentacao: Omit<EstoqueMovimentacao, 'id' | 'date'>) => void;
+  updateItemQuantity: (itemId: string, quantity: number, type: EstoqueMovimentacao['type'], reason: string) => void;
+
+  // Payment Actions
+  addPendingPayment: (payment: Omit<PendingPayment, 'id' | 'createdAt'>) => void;
+  updatePaymentStatus: (paymentId: string, status: PendingPayment['status'], paidAt?: Date) => void;
+  processPaymentWebhook: (webhook: PaymentWebhook & { paymentId: string }) => boolean;
+  createVendaFromPayment: (paymentId: string) => boolean;
+  checkPaymentStatus: (paymentId: string) => Promise<void>;
+
+  // Computed
+  getDashboardMetrics: () => { receitaBruta: number; lucroLiquido: number; totalVendas: number; revendedoresAtivos: number; };
+  getChartData: () => Array<{ date: string; vendas: number; lucro: number; }>;
 }
